@@ -21,7 +21,7 @@ This repository contains the Cora, CiteSeer and Pubmed dataset.
 
 ## References
 
-[1] [Luan, et al., Break the Ceiling: Stronger Multi-scale Deep Graph Convolutional Networks, 2019](https://arxiv.org/abs/????.?????)
+[1] [Luan, et al., Break the Ceiling: Stronger Multi-scale Deep Graph Convolutional Networks, 2019](https://arxiv.org/abs/1906.02174)
 
 ## Cite
 
@@ -32,8 +32,8 @@ Please kindly cite our work if necessary:
 title={Break the Ceiling: Stronger Multi-scale Deep Graph Convolutional Networks},
 author={Luan, Sitao and Zhao, Mingde and Chang, Xiao-Wen and Precup, Doina},
 journal={arXiv},
-volume={????.?????},
+volume={1906.02174},
 year={2019},
-url={https://arxiv.org/abs/????.?????},
+url={https://arxiv.org/abs/1906.02174},
 }
 ```
