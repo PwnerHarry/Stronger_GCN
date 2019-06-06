@@ -1,8 +1,17 @@
 # Snowball and Truncated Krylov Graph Convolutional Networks in PyTorch
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-cora)](https://paperswithcode.com/sota/node-classification-on-cora?p=break-the-ceiling-stronger-multi-scale-deep)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-citeseer)](https://paperswithcode.com/sota/node-classification-on-citeseer?p=break-the-ceiling-stronger-multi-scale-deep)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-pubmed)](https://paperswithcode.com/sota/node-classification-on-pubmed?p=break-the-ceiling-stronger-multi-scale-deep)
+## Performance Ranking
+
+### Truncated Krylov
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-cora-with-public-split)](https://paperswithcode.com/sota/node-classification-on-cora-with-public-split?p=break-the-ceiling-stronger-multi-scale-deep)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-citeseer-with-public)](https://paperswithcode.com/sota/node-classification-on-citeseer-with-public?p=break-the-ceiling-stronger-multi-scale-deep)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-pubmed-with-public)](https://paperswithcode.com/sota/node-classification-on-pubmed-with-public?p=break-the-ceiling-stronger-multi-scale-deep)
+
+### Snowball (linear)
+
+### Snowball (linear + tanh)
+
+### Snowball (tanh)
 
 ====
 
