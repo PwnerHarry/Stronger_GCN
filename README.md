@@ -8,8 +8,21 @@ This repository contains the Cora, CiteSeer and PubMed dataset.
 
 ## Performance Ranking
 
+### Cora
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-cora-05)](https://paperswithcode.com/sota/node-classification-on-cora-05?p=break-the-ceiling-stronger-multi-scale-deep)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-cora-1)](https://paperswithcode.com/sota/node-classification-on-cora-1?p=break-the-ceiling-stronger-multi-scale-deep)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-cora-3)](https://paperswithcode.com/sota/node-classification-on-cora-3?p=break-the-ceiling-stronger-multi-scale-deep)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-cora-with-public-split)](https://paperswithcode.com/sota/node-classification-on-cora-with-public-split?p=break-the-ceiling-stronger-multi-scale-deep)
+
+### CiteSeer
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-citeseer-05)](https://paperswithcode.com/sota/node-classification-on-citeseer-05?p=break-the-ceiling-stronger-multi-scale-deep)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-citeseer-1)](https://paperswithcode.com/sota/node-classification-on-citeseer-1?p=break-the-ceiling-stronger-multi-scale-deep)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-citeseer-with-public)](https://paperswithcode.com/sota/node-classification-on-citeseer-with-public?p=break-the-ceiling-stronger-multi-scale-deep)
+
+### PubMed
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-pubmed-003)](https://paperswithcode.com/sota/node-classification-on-pubmed-003?p=break-the-ceiling-stronger-multi-scale-deep)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-pubmed-005)](https://paperswithcode.com/sota/node-classification-on-pubmed-005?p=break-the-ceiling-stronger-multi-scale-deep)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-pubmed-01)](https://paperswithcode.com/sota/node-classification-on-pubmed-01?p=break-the-ceiling-stronger-multi-scale-deep)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-pubmed-with-public)](https://paperswithcode.com/sota/node-classification-on-pubmed-with-public?p=break-the-ceiling-stronger-multi-scale-deep)
 
 ## Initialization
