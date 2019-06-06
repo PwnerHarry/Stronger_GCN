@@ -1,10 +1,9 @@
 Snowball and Truncated Krylov Graph Convolutional Networks in PyTorch
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-cora)](https://paperswithcode.com/sota/node-classification-on-cora?p=break-the-ceiling-stronger-multi-scale-deep)
-
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-citeseer)](https://paperswithcode.com/sota/node-classification-on-citeseer?p=break-the-ceiling-stronger-multi-scale-deep)
-
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-pubmed)](https://paperswithcode.com/sota/node-classification-on-pubmed?p=break-the-ceiling-stronger-multi-scale-deep)
+
 ====
 
 PyTorch implementation of Snowball and Truncated Krylov Graph Convolutional Network (GCN) architectures for semi-supervised classification [1].
