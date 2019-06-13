@@ -1,7 +1,5 @@
 # Snowball and Truncated Krylov Graph Convolutional Networks in PyTorch
 
-====
-
 PyTorch implementation of Snowball and Truncated Krylov Graph Convolutional Network (GCN) architectures for semi-supervised classification [1].
 
 This repository contains the Cora, CiteSeer and PubMed dataset.
@@ -25,15 +23,15 @@ This repository contains the Cora, CiteSeer and PubMed dataset.
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-pubmed-01)](https://paperswithcode.com/sota/node-classification-on-pubmed-01?p=break-the-ceiling-stronger-multi-scale-deep)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-pubmed-with-public)](https://paperswithcode.com/sota/node-classification-on-pubmed-with-public?p=break-the-ceiling-stronger-multi-scale-deep)
 
-## Initialization
-
-```python initialize_dataset.py```
-
 ## Requirements
 
   * PyTorch 1.0.0+
   * Python 3.6+
   * Best with CUDA/10.0 and NVIDIA apex (we have used the container docker://nvcr.io/nvidia/pytorch:19.05-py3 with singularity)
+
+## Initialization
+
+```python initialize_dataset.py```
 
 ## Usage
 
