@@ -1,0 +1,784 @@
+
+\documentclass{article}
+\usepackage[final,nonatbib]{neurips_2019}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{epstopdf}
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\usepackage{pxfonts}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{footnote}
+\usepackage{enumerate}
+\usepackage{physics}
+\usepackage{enumitem}
+\usepackage[english]{babel}
+\usepackage{comment}
+\usepackage{setspace}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\newcommand{\INDSTATE}[1][1]{\STATE\hspace{#1\algorithmicindent}}
+\usepackage{forloop}
+\usepackage{chngpage}
+\usepackage{color, colortbl}
+\definecolor{darkgreen}{rgb}{0, 0.5, 0}
+\definecolor{red}{rgb}{1, 0, 0}
+\definecolor{purple}{rgb}{0.5, 0, 0.5}
+\usepackage{booktabs, multirow}
+\usepackage{comment}
+\usepackage[toc,page]{appendix}
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\spn}{span}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\X}{\mathbb{X}}
+\newcommand\etal{\textit{et al.}}
+\newcommand\ie{\textit{i.e.}}
+\newcommand\eg{\textit{e.g.}}
+\newcommand\st{\textit{s.t.}}
+\newcommand\wrt{\textit{w.r.t.}}
+\newcommand\etc{\textit{etc.}}
+\newcommand\doubleE{\mathbb{E}}
+\newcommand\doubleP{\mathbb{P}}
+\newcommand\doubleR{\mathbb{R}}
+\newcommand\scriptS{\mathcal{S}}
+\newcommand\scriptO{\mathcal{O}}
+\newcommand\scriptA{\mathcal{A}}
+\newcommand\scriptX{\mathcal{X}}
+\newcommand\red{\textcolor{red}}
+\newcommand{\colvec}[2][1]{%
+	\scalebox{#1}{%
+		\renewcommand{\arraystretch}{1.45}%
+		$\begin{bmatrix}#2\end{bmatrix}$%
+	}
+}
+\makeatletter
+\newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\makeatother
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{reflection}[2][Reflection]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{proposition}[2][Proposition]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{conjecture}[2][Conjecture]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{proof}{{\noindent\it Proof}\quad}{\hfill $\square$\par}
+
+\def\coef_vec{
+	\begin{bmatrix}
+		\frac{g^{(0) } (0)}{0!} \\[6pt]
+		\frac{g^{(1) } (0)}{1!} \\[6pt]
+		\frac{g^{(2) } (0)}{2!}\\[6pt]
+		\vdots\\[6pt]
+		\frac{g^{(\infty) } (0)}{\infty!}
+\end{bmatrix}}
+
+\makeatletter
+\newsavebox{\@brx}
+\newcommand{\llangle}[1][]{\savebox{\@brx}{\(\m@th{#1\langle}\)}%
+	\mathopen{\copy\@brx\kern-0.5\wd\@brx\usebox{\@brx}}}
+\newcommand{\rrangle}[1][]{\savebox{\@brx}{\(\m@th{#1\rangle}\)}%
+	\mathclose{\copy\@brx\kern-0.5\wd\@brx\usebox{\@brx}}}
+\makeatother
+
+\newtheorem{definition}{Definition}
+
+\newcommand{\inprod}[2]{{\llangle #1 ,\;}{#2\rrangle}}
+
+\title{Break the Ceiling: Stronger Multi-scale Deep Graph Convolutional Networks}
+
+\author{
+Sitao Luan$^{1,2,*}$, Mingde Zhao$^{1,2,*}$, Xiao-Wen Chang$^{1}$, Doina Precup$^{1,2,3}$\\
+\{sitao.luan@mail, mingde.zhao@mail, chang@cs, dprecup@cs\}.mcgill.ca\\
+$^1$McGill University; $^2$Mila; $^3$DeepMind\\
+$^{*}$Equal Contribution
+}
+
+\begin{document}
+\maketitle	
+
+\begin{abstract}
+Recently, neural network based approaches have achieved significant progress for solving large, complex, graph-structured problems. Nevertheless, the advantages of multi-scale information and deep architectures have not been sufficiently exploited. In this paper, we first analyze key factors constraining the expressive power of existing Graph Convolutional Networks (GCNs), including the activation function and shallow learning mechanisms. Then, we generalize spectral graph convolution and deep GCN in block Krylov subspace forms, upon which we devise two architectures, both scalable in depth however making use of multi-scale information differently. On several node classification tasks, the proposed architectures achieve state-of-the-art performance.
+\end{abstract}
+	
+\section{Introduction \& Motivation}
+\label{sec:introduction}
+Many real-world problems can be modeled as graphs \cite{hamilton2017inductive, kipf2016classification, liao2019lanczos, gilmer2017neural, monti2017geometric, defferrard2016fast}. Inspired by the success of Convolutional Neural Networks (CNNs) \cite{lecun1998gradient} in computer vision \cite{li2018adaptive}, graph convolution defined on graph Fourier domain stands out as the key operator and one of the most powerful tools for using machine learning to solve graph problems. In this paper, we focus on spectrum-free Graph Convolutional Networks (GCNs) \cite{bronstein2016geometric, shuman2012emerging}, which have demonstrated state-of-the-art performance on many transductive and inductive learning tasks \cite{defferrard2016fast, kipf2016classification, liao2019lanczos, chen2018fastgcn, chen2017stochastic}.
+
+One major problem of the existing GCNs is the low expressive power limited by their shallow learning mechanisms \cite{zhang2018graph, wu2019survey}. There are mainly two reasons why people have not yet achieved an architecture that is scalable in depth. First, this problem is difficult: considering graph convolution as a special form of Laplacian smoothing \cite{li2018deeper}, networks with multiple convolutional layers will suffer from an over-smoothing problem that makes the representation of even distant nodes indistinguishable \cite{zhang2018graph}. Second, some people think it is unnecessary: for example, \cite{bronstein2016geometric} states that it is not necessary for the label information to totally traverse the entire graph and one can operate on the multi-scale coarsened input graph and obtain the same flow of information as GCNs with more layers. Acknowledging the difficulty, we hold on to the objective of deepening GCNs since the desired compositionality\footnote{The expressive power of a sound deep NN architecture should be expected to grow with the increment of network depth \cite{lecun2015deep, hinton2006fast}.} will yield easy articulation and consistent performance for problems with different scales.
+
+In this paper, we break the performance ceiling of the GCNs. First, we analyze the limits of the existing GCNs brought by the shallow learning mechanisms and the activation functions. Then, we show that any graph convolution with a well-defined analytic spectral filter can be written as a product of a block Krylov matrix and a learnable parameter matrix in a special form. Based on this, we propose two GCN architectures that leverage multi-scale information in different ways and are scalable in depth, with stronger expressive powers and abilities to extract richer representations of graph-structured data. We also show that the equivalence of the two architectures can be achieved under certain conditions. For empirical validation, we test different instances of the proposed architectures on multiple node classification tasks. The results show that even the simplest instance of the architectures achieves state-of-the-art performance, and the complex ones achieve surprisingly higher performance, with or without validation sets.
+
+\section{Why Deep GCN Does Not Work Well?}\label{sec:why}
+\subsection{Foundations}
+As in \cite{frommer2017block}, we use bold font for vectors (\eg{} $\bm{v}$), block vectors (\eg{} $\bm{V}$) and matrix blocks (\eg{} $\bm{V_i}$). Suppose we have an undirected graph $\mathcal{G}=(\mathcal{V},\mathcal{E}, A)$, where $\mathcal{V}$ is the node set with $\abs{\mathcal{V}}=N$, $\mathcal{E}$ is the edge set with $\abs{\mathcal{E}}=E$, $A \in \mathbb{R}^{N\times N}$ is a symmetric adjacency matrix and $D$ is a diagonal degree matrix, \ie{} $D_{ii} = \sum_j A_{ij}$. A diffusion process \cite{coifman2006diffusion, coifman2006diffusionmaps} on $\mathcal{G}$ can be defined by a diffusion operator $L$, which is a symmetric matrix, \eg{} graph Laplacian $L=D-A$, normalized graph Laplacian $L=I-D^{-1/2} A D^{-1/2}$ and affinity matrix $L = A + I$, \etc{}. In this paper, we use $L$ for a general diffusion operator, unless specified otherwise. The eigendecomposition of $L$ gives us $L=U \Lambda U^T$, where $\Lambda$ is a diagonal matrix whose diagonal elements are eigenvalues and the columns of $U$ are the orthonormal eigenvectors, named graph Fourier basis. We also have a feature matrix (graph signals) $\bm{X} \in \mathbb{R}^{N\times F}$ (which can be regarded as a block vector)
+defined on $\mathcal{V}$ and each node $i$ has a feature vector $\bm{X_{i,:}}$, which is the $i$-th row of $\bm{X}$.
+
+Spectral graph convolution is defined in graph Fourier domain \st{} $\bm{x} *_{\mathcal{G}} \bm{y} = U((U^T \bm{x}) \odot (U^T\bm{y}))$, where $\bm{x}, \bm{y} \in \mathbb{R}^N$ and $\odot$ is the Hadamard product \cite{defferrard2016fast}. Following this definition, a graph signal $\bm{x}$ filtered by $g_\theta$ can be written as
+\begin{equation}\label{def}
+    \bm{y} = g_\theta(L)\bm{x} = g_\theta(U \Lambda U^T) \bm{x} = U g_\theta(\Lambda) U^T \bm{x}
+\end{equation}
+where $g_\theta$ is any function which is analytic inside a closed contour which encircles $\lambda(L)$, \eg{} Chebyshev polynomial \cite{defferrard2016fast}. GCN generalizes this definition to signals with $F$ input channels and $O$ output channels and its network structure can be described as
+\begin{equation}
+    \label{eq0}
+   \bm{Y} = \text{softmax} ({L} \; \text{ReLU} ( L \bm{X} W_0 ) \; W_1 )
+\end{equation}
+where
+\begin{equation} \label{eq01}
+L \equiv \tilde{D}^{-1/2} \tilde{A} \tilde{D}^{-1/2}, \ \ \tilde{A} \equiv A+I, \ \
+\tilde{D}\equiv \mbox{diag}(\textstyle{\sum_j} \tilde{A}_{1j}, \ldots, \sum_j \tilde{A}_{Nj})
+\end{equation}
+This is called spectrum-free method \cite{bronstein2016geometric} since it requires no explicit computation of eigendecomposition and operations on the frequency domain \cite{zhang2018graph}.
+
+\subsection{Problems}
+Suppose we deepen GCN in the same way as \cite{kipf2016classification, li2018deeper}, we have
+\begin{equation}\label{eq1}
+\bm{Y} = \text{softmax} ({L} \; \text{ReLU} ( \cdots L \; \text{ReLU} (L\; \text{ReLU} (L \bm{X} W_0 ) \; W_1 )\; W_2 \cdots ) \; W_n ) \equiv  \text{softmax} (\bm{Y'})
+\end{equation}
+For this architecture, \cite{li2018deeper} gives an analysis on the effect of $L$ without considering the $\text{ReLU}$ activation function. Our analyses on \eqref{eq1} can be summarized in the following theorems.
+
+\begin{theorem} 1
+\label{thm1}
+Suppose that $\mathcal{G}$ has $k$ connected components and the diffusion operator $L$ is defined as that in \eqref{eq01}. Let $\bm{X} \in \mathbb{R}^{N \times F}$ be any block vector and let $W_j$ be any   non-negative parameter matrix with $\|W_j\|_2\leq 1$ for $j=0,1,\ldots$.
+If $\mathcal{G}$ has no bipartite components, then in \eqref{eq1}, as $n \to \infty$, $\text{rank}(\bm{Y'}) \leq k$.
+\end{theorem}
+
+\begin{proof}
+See Appendix \ref{appendix:1}.
+\end{proof}
+
+\begin{conjecture} 1
+\label{conj1}
+Theorem 1  still holds without the non-negative constraint on the parameter matrices.
+\end{conjecture}
+
+\begin{theorem} 2
+\label{thm2}
+Suppose the $n$-dimensional $\bm{x}$ and   $\bm{y}$ are independently sampled from a continuous distribution and the activation function $\text{Tanh}(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$ is applied to $[\bm{x},\bm{y}]$ pointwisely, then
+$$\doubleP(\text{rank}\left(\text{Tanh}([\bm{x},\bm{y}])\right) = \text{rank}([\bm{x},\bm{y}])) = 1$$
+\end{theorem}
+
+\begin{proof}
+See Appendix \ref{appendix:1}.
+\end{proof}
+
+Theorem 1 shows that if we simply deepen GCN, the extracted features will degrade, \ie{} $\bm{Y'}$ only contains the stationary information of the graph structure and loses all the local information in node for being smoothed. In addition, from the proof we see that the pointwise ReLU transformation is a conspirator. Theorem 2 tells us that Tanh is better at keeping linear independence among column features. We design a numerical experiment on synthetic data (see Appendix) to test, under a 100-layer GCN architecture, how activation functions affect the rank of the output in each hidden layer during the feedforward process. As Figure 1(a) shows, the rank of hidden features decreases rapidly with ReLU, while having little fluctuation under Tanh, and even the identity function performs better than ReLU (see Appendix for more comparisons). So we propose to replace ReLU by Tanh.%ReLU is also found to have numerical stability issue in the bottom layers of GCN.
+\begin{figure*}[htbp]
+\centering
+\subfloat[Deep GCN]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{{fig_GCN_compare}.pdf}}
+\hfill
+\subfloat[Snowball]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{{fig_snowball_compare}.pdf}}
+\hfill
+\subfloat[Truncated Block Krylov]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{{fig_truncated_krylov_compare}.pdf}}
+\caption{Changes in the number of independent features with the increment of network depth}
+\label{{fig:activation}}
+\end{figure*}
+
+\section{Spectral Graph Convolution and Block Krylov Subspaces}
+\label{sec:krylov}
+
+\subsection{Block Krylov Subspaces}
+%Let $\mathbb{S}$ be a $^*$-subalgebra  with identity $I_s$, \ie{}
+Let $\mathbb{S}$ be a vector subspace of $\mathbb{R}^{F\times F}$ containing the identity matrix $I_F$ that is closed under matrix multiplication and transposition. We define an inner product $\langle\cdot, \cdot\rangle_{\mathbb{S}}$ in the block vector space $\mathbb{R}^{N \times F}$ as follows \cite{frommer2017block}:
+\begin{definition}
+A mapping $\langle\cdot, \cdot\rangle_{\mathbb{S}}$ from $\mathbb{R}^{N\times F} \times \mathbb{R}^{N\times F}$ to $\mathbb{S} $ is called a block inner product onto $\mathbb{S}$ if $\forall \bm{X, Y, Z} \in \mathbb{R}^{N\times F}$ and $\forall C \in \mathbb{S}$:
+\begin{enumerate}[leftmargin=12pt]
+\item $\mathbb{S}$-linearity: $\langle \bm{X}, \bm{Y}C \rangle_{\mathbb{S}} =  \langle \bm{X}, \bm{Y}\rangle_{\mathbb{S}}C$  and $ \langle \bm{X} + \bm{Y}, \bm{Z} \rangle_{\mathbb{S}} = \langle\bm{X}, \bm{Z}\rangle_{\mathbb{S}} + \langle \bm{Y}, \bm{Z}\rangle_{\mathbb{S}}$
+\item symmetry: $ \langle \bm{X}, \bm{Y}\rangle_{\mathbb{S}} = \langle\bm{Y}, \bm{X}\rangle_{\mathbb{S}}^T $
+\item definiteness: $ \langle \bm{X}, \bm{X}\rangle_{\mathbb{S}} $ is positive definite if $\bm{X}$ has full rank, and $ \langle \bm{X}, \bm{X}\rangle_{\mathbb{S}} = 0_F$ iff $\bm{X} = 0.$
+\end{enumerate}
+\end{definition}
+%\begin{definition}
+%A mapping $N$ which maps all $\bm{X} \in \mathbb{R}^{n\times s}$ with full rank to a matrix $N(\bm{X}) \in \mathbb{S}$ is called a scaling quotient if for all such $\bm{X}$ there exists $\bm{Y}\in \mathbb{R}^{n\times s}$ such that $\bm{X}= \bm{Y} N(\bm{X})$ and $ \langle\bm{Y}, \bm{Y}\rangle_{\mathbb{S}} = I_s$ .
+%\end{definition}
+	
+%Two block vectors $\bm{X}, \bm{Y}$ are called $\langle\cdot, \cdot\rangle_{\mathbb{S}} $-orthogonal if $\langle \bm{X}, \bm{Y}\rangle_{\mathbb{S}} = 0_s$ and we call a block vector $\langle\cdot, \cdot\rangle_{\mathbb{S}} $-normalized if $ \langle \bm{X}, \bm{X}\rangle_{\mathbb{S}} = I_s$
+There are mainly three ways to define $\langle\cdot, \cdot\rangle_{\mathbb{S}}$ \cite{frommer2017block}: 1) (Classical.) $\mathbb{S}^{\text{Cl}} = \mathbb{R}^{F\times F}$  and $ \langle \bm{X}, \bm{Y}\rangle_{\mathbb{S}}^{\text{Cl}}= \bm{X}^{T} \bm{Y}$; 2) (Global.) $\mathbb{S}^{\text{Gl}} = c I_F,\; c \in \mathbb{R} $   and $ \langle \bm{X}, \bm{Y}\rangle_{\mathbb{S}}^{\text{Gl}}= \text{trace}(\bm{X}^T \bm{Y}) I_F $; 3) (Loop-interchange.) $\mathbb{S}^{\text{Li}}$ is the set of diagonal matrices  and $ \langle \bm{X}, \bm{Y}\rangle_{\mathbb{S}}^{\text{Li}}= \text{diag}(\bm{X}^T \bm{Y})$. The three definitions are all useful yet we will use the classical one for our contribution.
+
+For further explanations, we give the definition of block vector subspace of $\mathbb{R}^{N\times F}$.
+\begin{definition}
+Given a set of block vectors $\{\bm{X}_k \}_{k=1}^m \subset \mathbb{R}^{N\times F} $, the $\mathbb{S}$-span of $\{\bm{X}_k \}_{k=1}^m$ is defined as $\mathrm{span}^{\mathbb{S}} \{\bm{X}_1, \dots, \bm{X}_m\} \vcentcolon = \{ \sum\limits_{k=1}^{m} \bm{X}_k C_k: C_k \in  \mathbb{S} \}$
+\end{definition}
+Given the above definition, the order-$m$ block Krylov subspace with respect to the matrix $A\in \mathbb{R}^{N\times N}$, the block vector $\bm{B}\in \mathbb{R}^{N\times F}$ and the vector space $\mathbb{S}$ can be defined as $\mathcal{K}_m^{\mathbb{S}} (A,\bm{B}) \vcentcolon = \text{span}^{\mathbb{S}} \{\bm{B}, A\bm{B}, \dots, A^{m-1} \bm{B}\} $. The corresponding block Krylov matrix is defined as $K_m (A,\bm{B})\vcentcolon = [ \bm{B}, A\bm{B}, \dots, A^{m-1} \bm{B}]$.
+
+%With different definitions of block inner product, we have different  $\mathcal{K}_m^{\mathbb{S}} (A,\bm{B})$ as we will see in Section \ref{conv_in_krylov}.  The one we use in this paper is the classical block inner product and the block Krylov subspace is $\mathcal{K}_m^{Cl} (A,\bm{B}) \vcentcolon= \{ \sum\limits_{k=1}^{m} A^k \bm{B} C_k : C_k \in \mathbb{R}^{F\times F}\}$.
+
+\subsection{Spectral Graph Convolution in Block Krylov Subspace Form}
+\label{conv_in_krylov}
+In this section, we show that any graph convolution with well-defined analytic spectral filter defined on $\boldmath{L} \in \mathbb{R}^{N\times N}$ can be written as the product of a block Krylov matrix with a learnable parameter matrix in a specific form. We take $\mathbb{S}=\mathbb{S}^{\text{Cl}} = \mathbb{R}^{F\times F}$.
+
+For any real analytic scalar function $g$, its power series expansion around center $0$ is
+$$g(x) = \sum\limits_{n=0}^\infty a_n x^n = \sum\limits_{n=0}^\infty \frac{g^{(n) } (0)}{n!} x^n, \; \abs{x} < R$$
+where $R$ is the radius of convergence.
+
+The function $g$ can be used to define a filter. Let $\rho(L)$ denote the spectrum radius of $L$ and suppose $\rho(L) < R$. The spectral filter $g(L)\in \mathbb{R}^{N \times N}$ can be defined as
+$$g(L) \vcentcolon = \sum\limits_{n=0}^\infty a_n L^n =\sum\limits_{n=0}^\infty \frac{g^{(n) } (0)}{n!} L^n, \; \rho(L) < R$$
+
+According to the definition of spectral graph convolution in \eqref{def}, graph signal $\bm{X}$ is filtered by $g(L)$ as follows,
+$$ g(L) \bm{X} = \sum\limits_{n=0}^\infty \frac{g^{(n) } (0)}{n!} L^n \bm{X} =\left[\bm{X}, L\bm{X}, L^2\bm{X}, \cdots  \right] \left[\frac{g^{(0) } (0)}{0!} {I_{F}} , \frac{g^{(1) } (0)}{1!}{I_{F}}  ,\frac{g^{(2) } (0)}{2!}{I_{F}}  , \cdots \right]^T = A'B'$$
+%\colvec{\frac{g^{(0) } (0)}{0!} {I_{F}} \\ \frac{g^{(1) } (0)}{1!}{I_{F}}  \\ \frac{g^{(2) } (0)}{2!}{I_{F}}  \\ \vdots  }
+where $A' \in \mathbb{R}^{N \times \infty}$ and $B' \in \mathbb{R}^{\infty \times F}$.
+We can see that $A'$ is a block Krylov matrix and Range($A'B'$) $\subseteq$ Range($A'$).
+It is shown in \cite{gutknecht2009block,frommer2017block}  that for $\mathbb{S}=\mathbb{R}^{F\times F}$
+there exists a smallest $m$ such that
+\begin{equation} \label{krylov}
+\text{span}^{\mathbb{S}} \{\bm{X}, L\bm{X}, L^2\bm{X}, \cdots  \}
+= \text{span}^{\mathbb{S}} \{\bm{X}, L\bm{X}, L^2\bm{X}, \dots,L^{m-1}\bm{X} \}
+\end{equation}
+where $m$ depends on $L$ and $\bm{X}$ and will be written as $m(L,\bm{X})$ later.
+This means for any $k\geq m$, $L^k \bm{X} \in \mathcal{K}_m^{\mathbb{S}} (L,\bm{X})$.
+From \eqref{krylov}, the convolution can be written as
+\begin{equation}\label{eq5}
+g(L) \bm{X}
+= \sum\limits_{n=0}^\infty \frac{g^{(n) } (0)}{n!} L^n \bm{X}
+\equiv \left[\bm{X}, L\bm{X}, \dots,L^{m-1}\bm{X}  \right] \left[ ({\Gamma_0}^{\mathbb{S}})^T  , ({\Gamma_1}^{\mathbb{S}})^T, \cdots ,({\Gamma_{m-1}^{\mathbb{S}}})^T  \right]^T \equiv  K_m (L,\bm{X}) \Gamma^{\mathbb{S}}
+\end{equation}
+%\colvec{ {\Gamma_0}^{\mathbb{S}}  \\ {\Gamma_1}^{\mathbb{S}}   \\ {\Gamma_2}^{\mathbb{S}} \\ \vdots \\ {\Gamma_{m-1}^{\mathbb{S}}} }
+where ${\Gamma_{i}^{\mathbb{S}}}\in \mathbb{R}^{F\times F}$ for $i=1,\ldots, m-1$ are parameter matrix blocks.
+Then, a graph convolutional layer can be be generally written as %If we use global inner product, $\Gamma_i^{\mathbb{S}} = c_i {I_F}$ and if we use loop-interchange definition, we will have a diagonal $\Gamma_i^{\mathbb{S}}$. When $g(L)\bm{X}$ is multiplied by a parameter matrix $W' \in \mathbb{R}^{F \times O}$,
+\begin{equation} \label{eq6}
+g(L)\bm{X}W' =  K_m (L,\bm{X}) \Gamma^{\mathbb{S}} W' =  K_m (L,\bm{X}) W^{\mathbb{S}}
+\end{equation}
+where $W^{\mathbb{S}} \equiv \Gamma^{\mathbb{S}} W' \in \mathbb{R}^{mF \times O}$. The essential  number of learnable parameters is $mF\times O$. %for $W^{\mathbb{S}}$ under classical inner product; 2) $FO+m$  for $c_i,W'$ under global inner product; and 3) $mF + FO$ for  $\text{diag}(\Gamma_i^{\mathbb{S}}),W'$ under loop-interchange inner product. We use the classical one for implementation.
+
+\subsection{Deep GCN in the Block Krylov Subspace Form}
+\label{deep_gcn_krylov}
+Since the spectral graph convolution can be simplified as \eqref{eq5}\eqref{eq6}, we can build deep GCN in the following way.
+
+Suppose that we have a sequence of analytic spectral filters $G=\{ g_0, g_1, \dots, g_n\}$ and a sequence of pointwise nonlinear activation functions $H = \{h_0, h_1,\dots, h_n \}$. Then, a deep spectral graph convolution network can be written as
+
+\begin{equation} \label{eq7}
+\textbf{Y} = \mbox{softmax} \left\lbrace g_n(L) \; h_{n-1} \left\lbrace  \cdots g_2(L) \; h_1\left\lbrace g_1(L) \; h_0 \left\{ g_0(L) \bm{X} W_0' \right\} W_1' \right\rbrace  W_2' \cdots \right\rbrace W_n' \right\rbrace
+\end{equation}
+Define
+$$
+\bm{H_0}=\bm{X}, \qquad \bm{H_{i+1}}=h_{i} \{ g_i(L) \bm{H_i} W_i\}, \ \ i = 0, \dots,n-1
+$$
+Then, we have
+$$
+\bm{Y}=\mbox{softmax}\{ g_n(L)\bm{H_n} W_n' \}
+$$
+From \eqref{eq6} and \eqref{eq7}, we see we can write
+$$
+\bm{H_{i+1}} = h_{i} \{K_{m_i} (L,\bm{H_i}) W_i^{\mathbb{S}_i}\}, \ \ m_i \equiv m(L,\bm{H_i})
+$$
+It is easy to see that, when $g_i(L) = I$, \eqref{eq7} is a fully connected network \cite{li2018deeper};
+when $n=1$, $g_0(L) = g_1(L)= L$, where $L$ is defined in \eqref{eq01}, it is just GCN \cite{kipf2016classification}; when $g_i(L)$ is defined by the Chebyshev polynomial \cite{hammond2011wavelets}, $W_i' = I$, \eqref{eq7} is ChebNet \cite{defferrard2016fast}.
+
+\subsection{Difficulties \& Inspirations}
+\label{difficulty}
+In the last subsection, we gave a general form of deep GCN in the block Krylov form. Following this idea, we can leverage the existing block Lanczos  algorithm \cite{frommer2017block, frommer2017radau} to find $m_i$ and compute orthogonal basis of $\mathcal{K}_{m_i}^{\mathbb{S}} (L,\bm{H_i})$ which makes the filter coefficients compact \cite{liao2019lanczos} and improve numerical stability. But there are some difficulties in practice:
+\begin{enumerate}[leftmargin=12pt]
+\item During the training phase, $\bm{H_i}$ changes every time when parameters are updated. This makes $m_i$ a variable and thus requires adaptive size for parameter matrices $W_i^{\mathbb{S}_i}$.
+\item %The value of $m_i$ can be large when we use global or loop-interchange block inner product. And
+For classical inner product, the $QR$ factorization that is needed in block Lanczos algorithm \cite{frommer2017block} is difficult to be implemented in backpropagation framework.
+\end{enumerate}
+
+Despite implementation intractability, block Krylov form is still meaningful for constructing GCNs that are scalable in depth as we illustrate below.
+%As Figure 2 shows, diffusion operator of the three popular citation networks are not low-rank; and also for Erd\H{o}s-R\'enyi graph $G(n,p)$ with $p = \omega(\frac{1}{n})$ and $\sigma^2 = p(1-p)$, the empirical spectral distribution of $\frac{1}{\sqrt{n\sigma}} A_n$ converges to Wigner semicircle distribution \cite{tran2013sparse}, which is far from low rank.
+%Therefore, we propose a densely connected GCN and truncated block Krylov GCN which can efficiently stack multi-scale information with full $L$ and obtain a deep architecture.
+
+%\subsection{Intuition  from the Block Krylov Form}
+For each node $v\in \{1,\ldots,N\}$ in the graph, denote $N(v)$ as the set of its neighbors and $N^k(v)$ as the set of its $k$-hop neighbors. Then, $L \bm{X}(v,:)$ can be interpreted as a weighted mean of the feature vectors of $v$ and $N(v)$. If the network goes deep as \eqref{eq1}, $\bm{Y}'(v,:)$ becomes the ``weighted mean'' of the feature vectors of
+$v$ and $N^{(n+1)}(v)$ (not exactly weighted mean because we have ReLU in each layer). As the scope grows, the nodes in the same connected component tend to have the same (global) features, while losing their individual (local) features, which makes them indistinguishable. Such phenomenon is recognized as ``oversmoothing'' \cite{li2018deeper}. Though it is reasonable to assume that the nodes in the same cluster share many similar properties, it will be harmful to omit the individual differences between each node.
+
+Therefore, the inspiration from the block Krylov form is that, to get a richer representation of each node, we need to concatenate the multi-scale information (local and global) together instead of merely doing smoothing in each hidden layer. If we have a smart way to stack multi-scale information, the network will be scalable in depth. To this end, we naturally come up with a densely connected architecture \cite{huang2017densely}, which we call \textit{snowball} network and a compact architecture, which we call the \textit{truncated Krylov} network, in which the multi-scale information is used differently.
+
+\section{Deep GCN Architectures}
+\label{deep}
+
+\subsection{Snowball}
+\label{snowball_gcn}
+
+The block Krylov form inspires first an architecture that concatenates multi-scale features incrementally, resulting in a densely-connected graph network (Figure \ref{fig:deep_gcn}(a)) as follows:
+\begin{align}
+\label{snowball}
+&\bm{H_0} = \bm{X},\ \ \bm{H_{l+1}} = f \left( L \left[ \bm{H_0}, \bm{H_1},\dots, \bm{H_l} \right] W_l \right),\ \ l=0,1, \dots,n - 1 \nonumber \\
+& \bm{C} = g \left( \left[ \bm{H_0}, \bm{H_1},\dots, \bm{H_n} \right] W_n \right)\\
+& \mbox{output} = \text{softmax} \left( L^{p} \bm{C} W_C \right) \nonumber
+\end{align}
+where $W_l \in \mathbb{R}^{\left( \sum_{i=0}^l F_i \right)  \times F_{l+1} }, W_n \in \mathbb{R}^{\left( \sum_{i=0}^n F_i \right)  \times F_C}$ and $W_C \in \mathbb{R}^{F_C \times F_O}$ are learnable parameter matrices, $F_{l+1}$ is the number of output channels in layer $l$; $f$ and $g$ are pointwise activation functions; $\bm{H_l}$ are extracted features; $\bm{C}$ is the output of a classifier of any kind, \eg{}, a fully connected neural network or even an identity layer, in which case $\bm{C}=[\bm{H_0}, \bm{H_1},\dots, \bm{H_n}]$; $p \in \{0,1\}$. When $p=0$, $L^p=I$ and when $p=1$, $L^P=L$, which means that we project $\bm{C}$ back onto graph Fourier basis, which is necessary when the graph structure encodes much information. Following this construction, we can stack all learned features as the input of the subsequent hidden layer, which is an efficient way to concatenate multi-scale information. The size of input will grow like a snowball and this construction is similar to DenseNet \cite{huang2017densely}, which is designed for regular grids (images). Thus, some advantages of DenseNet are naturally inherited, \eg{}, alleviate the vanishing-gradient problem, encourage feature reuse, increase the variation of input for each hidden layer, reduce the number of parameters, strengthen feature propagation and improve model compactness.
+
+\subsection{Truncated Krylov}
+
+The block Krylov form inspires then an architecture that concatenates multi-scale features directly together in each layer.
+However, as stated in Section \ref{difficulty}, the fact that $m_i$ is a variable makes GCN difficult to be merged into the block Krylov framework. Thus we compromise and set $m_i$ as a hyperparameter and get a truncated block Krylov network (Figure \ref{fig:deep_gcn}(b)) as shown below:
+\begin{align}
+&\bm{H_0} = \bm{X}, \ \ \bm{H_{l+1}}=f \left( \left[ \bm{H_l}, L \bm{H_l} \dots, L^{m_l -1} \bm{H_l} \right] W_l   \right), \ \ l=0,1,\dots,n - 1 \nonumber \\
+& \bm{C} = g \left( \bm{H_n} W_n   \right)\\
+& \mbox{output} = \text{softmax} \left(L^{p} \bm{C} W_C \right) \nonumber
+\end{align}
+where $W_l \in \mathbb{R}^{\left( m_l F_l \right)  \times F_{l+1} }, W_n \in \mathbb{R}^{ F_n \times F_C}$ and $W_C \in \mathbb{R}^{F_C \times F_O}$ are learnable parameter matrices; $f$ and $g$ are activation functions; $\bm{C}$ is the output of a classifier of any kind; $p \in \{0,1\}$. In the truncated Krylov network, the local information will not be diluted in each layer because in each layer $l$, we start the concatenation from $L^0 \bm{H_l}$ so that the extracted local information can be kept.
+
+There are works on the analysis of error bounds of doing truncation in block Krylov methods \cite{frommer2017block}. But the results need many assumptions either on $\bm{X}$, \eg{}, $\bm{X}$ is a standard Gaussian matrix \cite{ wang2015improved}, or on $L$, \eg{}, some conditions on the smallest and largest eigenvalues of $L$ have to be satisfied \cite{musco2018stability}. Instead of doing truncation for a specific function or a fixed $\bm{X}$, we are dealing with variable $\bm{X}$ during training. So we cannot get a practical error bound since we cannot put any restriction on $\bm{X}$ and its relation to $L$.
+
+\begin{figure*}[htbp]
+\centering
+\subfloat[Snowball]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.49\textwidth]{fig_snowball.pdf}}
+\hfill
+\subfloat[Truncated Block Krylov]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.49\textwidth]{fig_truncated_krylov.pdf}}
+\caption{Proposed Architectures}
+\label{fig:deep_gcn}
+\end{figure*}
+
+The Krylov subspace methods are often associated with low-rank approximation methods for large sparse matrices.
+Here we would like to mention \cite{liao2019lanczos} does low-rank approximation of $L$ by the Lanczos algorithm. It suffers from the tradeoff between accuracy and efficiency: the information in $L$ will be lost if $L$ is not low-rank, while keeping more information via increasing the Lanczos steps will hurt the efficiency. Since most of the graphs we are dealing with have sparse connectivity structures, they are actually not low-rank, \eg{}, the Erd\H{o}s-R\'enyi graph $G(n,p)$ with $p = \omega(\frac{1}{n})$ \cite{tran2013sparse} and examples in Appendix \rom{4}. Thus, we do not propose to do low-rank approximation in our architecture.
+
+\subsection{Equivalence of Linear Snowball GCN and Truncated Block Krylov Network}
+\label{linear_snowball}
+
+In this part, we will show that the two proposed architectures are inherently connected.
+In fact their equivalence can be established when using identify functions as $f$,
+identity layer as $\bm{C}$ and constraining the parameter matrix of truncated Krylov to be in a special form.
+
+In linear snowball GCN, we can split the parameter matrix $W_i$ into $i+1$ blocks and write it as $W_i=\left[ (\bm{W_i^{(1)}})^T, \cdots , (\bm{W_i^{(i+1)}})^T \right]^T$ and then following \eqref{snowball} we have
+%\colvec{\bm{W_i^1}\\ \vdots \\ \bm{W_i^{i+1}}}
+\begin{equation*}
+ \bm{H_0} = \bm{X}, \; \bm{H_1} = L\bm{X} W_0, \; \bm{H_2} = L[\bm{X}, \bm{H_1} ]W_1 = L\bm{X} \bm{W_1^{(1)}} +  L^2 \bm{X}\bm{ W_0^{(1)} W_1^{(2)}} = L [\bm{X}, L\bm{X}]
+ \begin{bmatrix}
+ \bm{I} & 0\\
+ 0 & \bm{W_0}^{(1)}
+\end{bmatrix} \colvec{ \bm{W_1^{(1)}} \\ \bm{W_1^{(2)}} },\; \dots %H_3 = L[X, H_1, H_2] W_2
+\end{equation*}
+As in \eqref{snowball}, we have $\bm{C}W_C = L[\bm{H_0}, \bm{H_1},\dots, \bm{H_n}] W_C$. Thus we can write
+\iffalse
+\[\bm{H_3} = L\bm{X} \bm{W_2^1} + L \bm{H_1} \bm{W_2^2} + L \bm{H_2} \bm{W_2^3} =
+%LXW_2^1 + L^2 X (W_0 W_2^2 + W_1^2 W_2^3) + L^3 X W_0 W_1^2 W_2^3 =
+[\bm{X}, L\bm{X}, L^2 \bm{X}]
+\begin{bmatrix}
+ \bm{I} & 0 & 0\\
+ 0 & \bm{I} & 0\\
+ 0 & 0 & \bm{W_0}^1
+\end{bmatrix}
+\begin{bmatrix}
+ \bm{I} & 0 & 0\\
+ 0 & \bm{W_1^2} & 0\\
+ 0 & 0 & \bm{W_1^1}
+\end{bmatrix} \colvec{ \bm{W_2^1} \\ \bm{W_2^2} \\ \bm{W_2^3}}
+\]
+\fi
+\begin{align*}
+ &  [\bm{H_0}, \bm{H_1} \cdots,  \bm{H_n}] W_C \\
+  %\colvec{ W_{n}^1 \\  W_{n}^2\\ \vdots \\  W_{n}^{n} \\ W_{n}^{n+1} }
+  =\ &  \ [\bm{X}, L\bm{X}, \cdots,  L^{n} \bm{X}]
+%\begin{bmatrix}
+%0 & 0 & \cdots & 0 & 0\\[6pt]
+% 0 & \bm{I} & \cdots & 0 & 0\\[0pt]
+% \vdots & \vdots & \ddots & \vdots & \vdots\\[6pt]
+% 0 & 0 & \cdots & \bm{I} & 0\\[6pt]
+% 0 & 0 & \cdots & 0 & \bm{I} \\
+%\end{bmatrix}
+\begin{bmatrix}
+ \bm{I} & 0 & \cdots & 0 \\[6pt]
+ 0 & \bm{I} & \cdots & 0 \\[0pt]
+ \vdots & \vdots & \ddots  & \vdots\\[6pt]
+ 0 & 0 & \cdots  & \bm{W_0}^{(1)} \\
+\end{bmatrix}
+\begin{bmatrix}
+\bm{I} & 0 & \cdots & 0 \\[6pt]
+0 & \bm{I} & \cdots & 0 \\[0pt]
+ \vdots & \vdots & \ddots  & \vdots\\[6pt]
+ 0 & 0 & \cdots &  \bm{{W_1^{(1)}}} \\
+\end{bmatrix}
+\cdots
+\begin{bmatrix}
+ \bm{I} & 0 & \cdots & 0\\[6pt]
+ 0 & \bm{W_{n-1}^{(n)}} & \cdots & 0 \\[0pt]
+ \vdots & \vdots & \ddots & \vdots\\[6pt]
+ 0 & 0 & \cdots &  \bm{W_{n-1}^{(1)}} \\
+\end{bmatrix}
+\colvec{ \bm{W_{C}^{(1)}} \\  \bm{W_{C}^{(2)}}\\ \vdots \\  \bm{W_{C}^{(n)}} }
+\end{align*}
+which is in the form of \eqref{eq6}, where the parameter matrix is the multiplication of a sequence of block diagonal matrices whose entries consist of identity blocks and blocks from other parameter matrices. Though the two proposed architectures stack multi-scale information in different ways, \ie{} incremental and direct respectively, the equivalence reveals that the truncated block Krylov network can be constrained to leverage multi-scale information in a way similar to the snowball architecture. While it is worth noting that when there are no constraints, truncated Krylov is capable of achieving more than what snowball does.
+
+\subsection{Relation to Message Passing Framework}
+We denote the concatenation operator as $\|$. If we consider $L$ as a general aggregation operator which aggregates node features with its neighborhood features, we see that the two proposed architectures both have close relationships with message passing framework \cite{gilmer2017neural}, which are illustrated in the following table, where $N^0(v) = \{v\}$, $M_t$ is a message function,
+$U_t$ is a vertex update function, $\bm{m_v^{(t+1)}}, \bm{h_v^{(t+1)}}$ are messages and hidden states at each node respectively, $\bm{m^{(t+1)}} = [\bm{m_1^{(t+1)}}, \cdots, \bm{m_N^{(t+1)}}]^T$,  $\bm{h^{(t+1)}} = [\bm{h_1^{(t+1)}}, \cdots, \bm{h_N^{(t+1)}}]^T$ and $\sigma$ is a nonlinear activation function.%Table \ref{tab:addlabel},
+% $A,D$ as adjacency matrix and degree matrix and $\tilde{A} = D^{-1}(I+A)D^{-1}$,
+\begin{table}[htbp]
+  \caption{Algorithms in Matrix and Nodewise Forms}
+  \label{sample-table}
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    & \multicolumn{2}{c}{Forms}                   \\
+    \cmidrule(r){2-3}
+    Algorithms     & Matrix     & Nodewise \\
+    \midrule
+    \multirow{2}[0]{*}{Message Passing} & $\bm{m}^{(t+1)} = M_t(A,\bm{h}^{(t)})$  & $\bm{m}_v^{(t+1)} = \sum\limits_{w \in N(v)}M_t(\bm{h}_v^{(t)}, \bm{h}_w^{(t)}, e_{vw})$     \\
+                   & $\bm{h}^{(t+1)} = U_t(\bm{h}^{(t)},\bm{m}^{(t+1)})$  & $\bm{h}_v^{(t+1)} = U_t(\bm{h}_v^{(t)}, \bm{m}_v^{(t+1)})$     \\
+    \midrule
+    \multirow{2}[0]{*}{GraphSAGE-GCN} & $\bm{m}^{(t+1)} = L \bm{h}^{(t)}$ &   $\bm{m}_v^{(t+1)} = \text{mean}(\{\bm{h}_v^{(t)}\} \cup \{\bm{h}_{N(v)}^{(t)} \})$     \\
+         & $\bm{h}^{(t+1)} = \sigma(
+         \bm{m}^{(t+1)}W_t)$  & $\bm{h}_v^{(t+1)} = \sigma(W_t^T \bm{m}_v^{(t+1)})$     \\
+    \midrule
+    \multirow{2}[0]{*}{Snowball}  & $\bm{m}^{(t+1)} = L [\bm{h}^{(0)} \| \dots \| \bm{h}^{(t)}]$ & $\bm{m}_v^{(t+1)} = \|_{i=0}^t \text{mean}(\{\bm{h}_v^{(i)}\} \cup \{\bm{h}_{N(v)}^{(i)} \})$  \\
+          & $\bm{h}_v^{(t+1)} = \sigma(\bm{m}^{(t+1)}W_t)$ & $\bm{h}_v^{(t+1)} = \sigma(W_t^T \bm{m}_v^{(t+1)})$    \\
+    \midrule
+    \multirow{2}[0]{*}{Truncated Krylov} & $\bm{m}^{(t+1)} = \bm{h}^{(t)} \| \dots \| L^{m_t-1} \bm{h}^{(t)}$       & $\bm{m}_v^{(t+1)} = \|_{i=0}^{m_t-1} \text{mean}(\cup_{k=0}^{i} \{\bm{h}_{N^k(v)}^{(t)} \})$   \\
+          & $\bm{h}^{(t+1)} = \sigma(\bm{m}^{(t+1)} W_t)$ & $\bm{h}_v^{(t+1)} = \sigma(W_t^T \bm{m}_v^{(t+1)})$      \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{comment}
+\begin{table}[htbp]
+%\tiny
+\label{tab:addlabel}%
+\setlength{\tabcolsep}{1pt}
+  \centering
+    \begin{tabular}{ccccc}
+          & Massage Passing & GraphSAGE-GCN & Snowball & Truncated Krylov \\
+    \multirow{2}[0]{*}{Matrix} & $m^{t+1} = M_t(A,h^t)$    &$m^{t+1} = L h^t$ & $m^{t+1} = L [h^{0} \| \dots \| h^t]$      & $m^{t+1} = h^t \| \dots \| L^{m_t-1} h^{t}$ \\
+          & $h^{t+1} = U_t(h^t,m^{t+1})$     & $h^{t+1} = \sigma(m^{t+1}W_t)$     & $h_v^{t+1} = \sigma(m^{t+1}W_t)$     & $h^{t+1} = \sigma(m^{t+1}W_t)$ \\
+    \multirow{2}[0]{*}{Nodewise} & \; $m_v^{t+1} = \sum\limits_{w \in N(v)}M_t(h_v^t, h_w^t, e_{vw})$ & \;$m_v^{t+1} = \text{mean}(\{h_v^t\} \cup \{h_{N(v)}^t \})$ &\; $m_v^{t+1} = \|_{i=0}^t \text{mean}(\{h_{N(v)}^i \})$ & \;$m_v^{t+1} = \|_{i=0}^{m_t-1} \text{mean}(\cup_{k=0}^{i} \{h_{N^k(v)}^t \})$ \\
+          & $h_v^{t+1} = U_t(h_v^t,m_v^{t+1})$   & $h_v^{t+1} = \sigma(W_t m_v^{t+1})$    & $h_v^{t+1} = \sigma(W_t m_v^{t+1})$    & $h_v^{t+1} = \sigma(W_t m_v^{t+1})$ \\
+    \end{tabular}%
+\end{table}%
+\end{comment}
+Compared to our proposed architectures, we can see that the message passing paradigm cannot avoid oversmoothing problem because it does not leverage multi-scale information in each layer and will finally lose local information. An alternate solution to address the oversmoothing problem could be to modify the readout function to $\hat{y} = R(\{\bm{h}_v^{(0)},\bm{h}_v^{(1)},\dots,\bm{h}_v^{(T)} | v \in \mathcal{V}\})$.
+
+
+
+\section{Experiments}\label{sec:experiments}
+On node classification tasks, we test $2$ instances of the snowball GCN and $1$ instance of the truncated Krylov GCN, which include linear snowball GCN ($f=g=\mbox{identity}$, $p=1$), snowball GCN ($f=\mbox{Tanh}$, $g=\mbox{identity}$, $p=1$) and truncated Krylov ($f=g=\mbox{Tanh}$, $p=0$). The test cases include on public splits \cite{yang2016revisiting,liao2019lanczos} of Cora, Citeseer and PubMed\footnote{Source code to be found at \url{https://github.com/PwnerHarry/Stronger_GCN}}, as well as the crafted smaller splits that are more difficult \cite{liao2019lanczos,li2018deeper,sun2019stage}. We compare the instances against several methods under $2$ experimental settings, with or without validations sets. The compared methods with validation sets include graph convolutional networks for fingerprint (GCN-FP) \cite{duvenaud2015convolutional}, gated graph neural networks (GGNN) \cite{li2015gated}, diffusion convolutional neural networks (DCNN) \cite{atwood2015diffusion}, Chebyshev networks (Cheby) \cite{defferrard2016fast}, graph convolutional networks (GCN) \cite{kipf2016classification}, message passing neural networks (MPNN) \cite{gilmer2017neural}, graph sample and aggregate (GraphSAGE) \cite{hamilton2017inductive}, graph partition neural networks (GPNN) \cite{liao2018graph}, graph attention networks (GAT) \cite{velivckovic2017attention}, LanczosNet (LNet) \cite{liao2019lanczos} and AdaLanczosNet (AdaLNet) \cite{liao2019lanczos}.
+The copmared methods without validation sets include label propagation using ParWalks (LP) \cite{wu2012learning}, Co-training \cite{li2018deeper}, Self-training \cite{li2018deeper}, Union \cite{li2018deeper}, Intersection \cite{li2018deeper}, GCN without validation \cite{li2018deeper}, Multi-stage training \cite{sun2019stage}, Multi-stage self-supervised (M3S) training \cite{sun2019stage}, GCN with sparse virtual adversarial training (GCN-SVAT) \cite{sun2019virtual} and GCN with dense virtual adversarial training (GCN-DVAT) \cite{sun2019virtual}.
+
+\begin{figure*}[htbp]
+\centering
+\subfloat[Linear Snowball]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{fig_tsne_linear_snowball_cora.pdf}}
+\hfill
+\subfloat[Snowball]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{fig_tsne_snowball_cora.pdf}}
+\hfill
+\subfloat[Truncated Krylov]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{fig_tsne_truncated_krylov_cora.pdf}}
+\caption{t-SNE for the extracted features trained on Cora (7 classes) public (5.2\%).}
+\label{fig:tsne}
+\end{figure*}
+
+In Table 2 and 3, for each test case, we report the accuracy averaged from $10$ independent runs using the best searched hyperparameters. These hyperparameters are reported in the appendix, which include learning rate and weight decay for the optimizers RMSprop or Adam for cases with validation or without validation, respectively, taking values in the intervals $[{10}^{-6}, 5\times{10}^{-3}]$ and $[{10}^{-5}, {10}^{-2}]$, respectively, width of hidden layers taking value in the set $\{100, 200, \cdots, 5000\}$, number of hidden layers in the set $\{1, 2, \dots, 50\}$, dropout in $(0, 0.99]$, and the number of Krylov blocks taking value in $\{1, 2, \dots, 100\}$. An early stopping trick is also used to achieve better training.
+Specifically we terminate the training after $100$ update steps of not improving the training loss.
+
+We see that the instances of the proposed architectures achieve overwhelming performance in \textit{all} test cases. We visualize a representative case using t-SNE \cite{maaten2008visualizing} in Figure \ref{fig:tsne}. From these visualization, we can see the instances can extract good features with small training data, especially for the truncated block Krylov network. Particularly, when the training splits are small, they perform astonishingly better than the existing methods. This may be explained by the fact that when there is less labeled data, larger scope of vision field is needed to make recognition of each node or to let the label signals propagate. We would also highlight that the linear snowball GCN can achieve state-of-the-art performance with much less computational cost.
+If $\mathcal{G}$ has no bipartite components, then in \eqref{eq1}, as $n \to \infty$, $\text{rank}(\bm{Y'}) \leq k$ almost surely.
+\input{tab_results_no_validation.tex}
+\input{tab_results_with_validation.tex}
+
+\section{Future Works}
+Future research of this like includes: 1) Investigating how the pointwise nonlinear activation functions influence block vectors, \eg{}, the feature block vector $\bm{X}$ and hidden feature block vectors $\bm{H_i}$, so that we can find possible activation functions better than Tanh; 2) Finding a better way to leverage the block Krylov algorithms instead of conducting simple truncation.
+
+\section*{Acknowledgements}
+The authors wish to express sincere gratitude for the computational resources of Compute Canada provided by Mila, as well as for the proofreading done by Sitao and Mingde's good friend \& coworker Ian P. Porada.
+\clearpage
+\bibliographystyle{abbrv}
+\bibliography{references}
+
+\newpage
+
+\begin{appendices}
+
+\section{Proofs of Theorems 1 and 2} \label{appendix:1}
+
+\begin{lemma} 1
+Suppose that a graph $\mathcal{G}$ has $k$ connected components $\{C_i\}_{i=1}^k$
+and $L$ is diffusion operator defined in \eqref{eq01}.
+If $\mathcal{G}$ has no bipartite components, then $\lambda_i(L)\in (-1,1]$ with
+$$
+\lambda_1 = \cdots = \lambda_k = 1 > |\lambda_{k+1}| \geq \cdots  \geq |\lambda_N|
+$$
+%Then $L$ has $k$ linearly independent eigenvectors $\{\bm{v}_1,\dots, \bm{v}_k\}$ corresponding to its %largest eigenvalue 1. If $\mathcal{G}$ has no bipartite components, then for any $\bm{x} \in %\mathbb{R}^N$
+%\begin{equation}\label{eq2}
+%\lim_{m \rightarrow \infty }  L^m \bm{x} = [\bm{v_1},\dots, \bm{v_k}] \bm{\theta},
+%\end{equation}
+%for some $\bm{\theta} \in \mathbb{R}^k$.
+\end{lemma}
+
+\begin{proof}
+See Theorem 1 in \cite{li2018deeper}.
+\end{proof}
+%% {(\bf What does "uniformly sample" mean? A uniform distribution is for a finite region. Note that you cannot pick a real number uniformly in the 1-dimensional case), I agree, but please check: \url{https://math.stackexchange.com/questions/85955/is-there-a-uniform-distribution-over-the-real-line} and \url{https://en.wikipedia.org/wiki/Prior_probability#Improper_priors}}, then
+%\begin{equation}\label{eq:two_vec}
+%\doubleP\left(\text{rank}\left(\text{ReLU}([\bm{x},\bm{y}])\right) \leq %\text{rank}([\bm{x},\bm{y}]) \;|\;\bm{x},\bm{y} \in \mathbb{R}^N\right) = 1
+%\end{equation}
+%\end{lemma}
+%\begin{proof}
+%See Appendix \rom{1}.
+%\end{proof}
+\begin{comment}
+
+
+\begin{lemma} 2
+Suppose that the $n$-dimensional $\bm{x}$ and  $\bm{y}$ are independently sampled from a continuous distribution
+defined on $\mathbb{R}^n$.
+Then for the pointwise function $\text{ReLU}(z) = \text{max}(0,z)$, we have
+$$\doubleP(\text{rank}\left(\text{ReLU}([\bm{x}, \bm{y}])\right) \leq \text{rank}([\bm{x}, \bm{y}])) = 1$$
+\end{lemma}
+\begin{proof}
+According to the given assumption and Corollary 1.2 in \cite{feng2007rank},
+$$
+\doubleP\left(\text{rank}([\bm{x}, \bm{y}]) = 0 \right) = 0, \ \
+\doubleP\left(\text{rank}([\bm{x}, \bm{y}]) = 1 \right) = 0, \ \
+\doubleP\left(\text{rank}([\bm{x}, \bm{y}]) = 2 \right) = 1
+$$
+Then
+\begin{align*}
+&\doubleP\left(\text{rank}\left(\text{ReLU}([\bm{x}, \bm{y}])\right) \leq \text{rank}([\bm{x}, \bm{y}]) \right) \\ %= \frac{\doubleP\left(\text{rank}\left(\text{ReLU}([\bm{x}, \bm{y}])\right) \leq \text{rank}([\bm{x}, \bm{y}]) \right)}{\doubleP\left(\bm{x}, \bm{y} \in \mathbb{R}^N\right)}\\
+= \ &  \doubleP\left(\text{rank}\left(\text{ReLU}([\bm{x}, \bm{y}])\right) \leq \text{rank}([\bm{x}, \bm{y}]) \;|\; \text{rank}([\bm{x}, \bm{y}]) = 1 \right) \doubleP\left(\text{rank}([\bm{x}, \bm{y}]) = 0 \right) \\
+ & +  \doubleP\left(\text{rank}\left(\text{ReLU}([\bm{x}, \bm{y}])\right) \leq \text{rank}([\bm{x}, \bm{y}]) \;|\; \text{rank}([\bm{x}, \bm{y}]) = 1 \right) \doubleP\left(\text{rank}([\bm{x}, \bm{y}]) = 1 \right) \\
+& + \doubleP\left(\text{rank}\left(\text{ReLU}([\bm{x}, \bm{y}])\right) \leq \text{rank}([\bm{x}, \bm{y}]) \;|\; \text{rank}([\bm{x}, \bm{y}]) = 2\right) \doubleP\left(\text{rank}([\bm{x}, \bm{y}]) = 2 \right)\\
+= \ & 0 + 0 + 1 \times 1 = 1
+\end{align*}
+
+\begin{align*}
+     &\doubleP\left(\text{rank}\left(\text{ReLU}([\bm{x}, \bm{y}])\right) < \text{rank}([\bm{x}, \bm{y}]) \right)\\
+     &=\doubleP\left(\text{rank}\left(\text{ReLU}([\bm{x}, \bm{y}])\right) = 1 \;|\; \text{rank}([\bm{x}, \bm{y}]) = 2 \right) \doubleP\left( \text{rank}([\bm{x}, \bm{y}]) = 2 \right)\\
+     & + \doubleP\left(\text{rank}\left(\text{ReLU}([\bm{x}, \bm{y}])\right) = 0 \;|\; \text{rank}([\bm{x}, \bm{y}]) = 2 \right) \doubleP\left( \text{rank}([\bm{x}, \bm{y}]) = 2 \right)\\
+     & = \frac{1}{2^N} \frac{1+N}{2^N}
+\end{align*}
+completing the proof.
+\end{proof}
+
+
+
+\begin{lemma} 3
+ Suppose we randomly sample $\bm{x}, \bm{y} \in \mathbb{R}^N$ under a continuous distribution, then
+ $$\doubleP(\bm{x_+} = d \bm{y_+}, \bm{x_-} \neq d \bm{y_-} \;|\; x,y \in \mathbb{R}^N, d \neq 0) = \frac{1}{2^N} \frac{1+N}{2^N}$$
+\end{lemma}
+\begin{proof}
+\begin{align*}
+    &\doubleP(\bm{x_+} = d \bm{y_+}, \bm{x_-} \neq d \bm{y_-}) \\
+    & = \doubleP (\bm{x_+} = d \bm{y_+}, \bm{x_-} \neq d \bm{y_-} \;|\;  df(\bm{x_+}) \leq 1 ) \; \doubleP (df(\bm{x_+}) \leq 1) + \doubleP (\bm{x_+} = d \bm{y_+}, \bm{x_-} \neq d \bm{y_-} \;|\;  df(\bm{x_+}) > 1 ) \; \doubleP (df(\bm{x_+}) > 1)\\
+    &=\frac{1}{2^N} \frac{1+N}{2^N} + 0 \cdot \frac{2^N -1 -N}{2^N} =\frac{1}{2^N} \frac{1+N}{2^N}
+\end{align*}
+where $df$ denotes degree of freedom. $df(\bm{x_+}) \leq 1$ means that $\bm{x}$ can at most have one dimension to be positive and there are $1+N$ out of $2^N$ hyperoctants that satisfies this condition. The set of $\bm{y}$ that can make $\bm{x_+} = d \bm{y_+}, \bm{x_-} \neq d \bm{y_-}$ hold has an area of $\frac{1}{2^N}$, \ie{} when $\bm{y}$ is in the same hyperoctant as $\bm{x}$. If $\bm{x}$ lies in other hyperoctants, $df(y_-) \leq N-2$. And since $\bm{x_+} = d \bm{y_+}$, $\bm{y}$ is just a low dimensional surface in $\mathbb{R}^N$ with area 0.
+\end{proof}
+\end{comment}
+
+\begin{theorem} 1
+Suppose that $\mathcal{G}$ has $k$ connected components and the diffusion operator $L$ is defined as that in \eqref{eq01}. Let $\bm{X} \in \mathbb{R}^{N \times F}$ be any block vector and let $W_j$ be any   non-negative parameter matrix with $\|W_j\|_2\leq 1$ for $j=0,1,\ldots$.
+If $\mathcal{G}$ has no bipartite components, then in \eqref{eq1}, as $n \to \infty$, $\text{rank}(\bm{Y'}) \leq k$.
+%, consider the space $\mathbb{R}^{N \times F}$ of all block vectors $\bm{X}$ and any set of parameter matrices $\{W_0, W_1, \dots, W_n\}$, we have $\text{rank}(\bm{Y'}) \leq k$ with probability 1, as $n\rightarrow \infty$.
+\end{theorem}	
+
+\begin{proof}
+\begin{comment}
+Upon the conclusions in Lemma 2-3, we have rank$\left(\text{ReLU} (L \textbf{X})\right) \leq$rank($L \textbf{X}$) with probability 1 and it is obvious rank$(L \bm{X} W_0) \leq$rank($L \bm{X}$). Using these two inequality iteratively for \eqref{eq1}, we have rank($\bm{Y'}$) $\leq$ rank($L^{n+1}  \bm{X}$). Based on Lemma 1, we have probability 1 to get
+\begin{equation*} \label{eq3}
+\underset{n \rightarrow \infty }{\text{lim}} \; \text{rank}(\bm{Y'}) \leq \underset{n \rightarrow \infty }{\text{lim}}\; \text{rank}(L^{n+1} \bm{X}) = \text{rank} ([\bm{v_1},\dots, \bm{v_k}] [\bm{\theta_1},\dots, \bm{\theta_F}]) \leq \text{rank}([\bm{v_1},\dots, \bm{v_k}]) = k,
+\end{equation*}
+where $\bm{\theta_i} \in \mathbb{R}^k, i=1,\dots,F$. Thus, rank($\bm{Y'}$) $\leq k$
+\end{comment}
+Note that $\bm{Y'}$ is $N$ by $F$.
+Certainly $\rank(\bm{Y'})\leq k$ if $k\geq F$.
+In the following we assume $k<F$.
+
+Let $\bm{Y_0} = \mathrm{ReLU}(L\bm{X}W_0)$, then $\bm{Y_0}$ is a non-negative block vector.
+Since $L$ and $W_1$ are non-negative as well, we have
+$$
+L \mathrm{ReLU}(L\bm{Y_0}W_1)W_2 = L L\bm{Y_0}W_1W_2 = L^2 \bm{Y_0}W_1W_2
+$$
+which is non-negative.
+In general, it is easy to see from \eqref{eq1}, we have
+$$
+\bm{Y'} = L^n \bm{Y_0} W_1 W_2 \cdots W_n
+%= L^n \bm{Y_n}
+$$
+Thus, with the condition $\|W_j\|_2\leq 1$ for any $j$,
+the $i$-th largest singular value of $\bm{Y'}$ satisfies
+$$
+\sigma_i(\bm{Y'}) \leq \sigma_i(L^n) \|\bm{Y_0}\|_2\|W_1\|_2\cdots\|W_n\|_2
+\leq|\lambda_i(L)|^n \|\bm{Y_0}\|_2, \ \ i=1,2, \ldots, \min\{N,F\}
+$$
+From Lemma 1 we can conclude that
+$$
+\lim_{n\rightarrow \infty} \sigma_i(\bm{Y'}) = 0, \ \ i=k+1, k+2, \ldots, \min\{N,F\}
+$$
+Thus, $\lim_{n\rightarrow \infty}\mathrm{rank}(Y') \leq k$.
+\end{proof}
+
+%\begin{lemma} 4
+ %Given $\bm{x}, y\in \mathbb{R}^2$ and pointwise function $\text{Tanh}(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$, we have
+%$$\doubleP(\text{rank}\left(\text{Tanh}([x,y])\right) \geq \text{rank}([x,y]) \;|\; x,y \in \mathbb{R}^N) = 1 $$
+%\end{lemma}
+
+
+\begin{theorem} 2
+Suppose the $n$-dimensional $\bm{x}$ and   $\bm{y}$ are independently sampled from a continuous distribution and the activation function $\text{Tanh}(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$ is applied to $[\bm{x},\bm{y}]$ pointwisely, then
+$$\doubleP(\text{rank}\left(\text{Tanh}([\bm{x},\bm{y}])\right) = \text{rank}([\bm{x},\bm{y}])) = 1$$
+\end{theorem}
+
+\begin{proof}
+Since $\bm{x}$ and  $\bm{y}$ are sampled from a continuous distribution,
+ $\doubleP(\mbox{rank}([\bm{x},\bm{y}])=2)=1$ (see \cite{feng2007rank}).
+Then
+\begin{align}
+  & \doubleP(\text{rank}(\text{Tanh}([\bm{x},\bm{y}])) = \text{rank}([\bm{x},\bm{y}])) \notag\\
+ = & \ \doubleP(\text{rank}(\text{Tanh}([\bm{x},\bm{y}])) = \text{rank}([\bm{x},\bm{y}])
+  \,|\, \text{rank}([\bm{x},\bm{y}])=2) \doubleP(\text{rank}([\bm{x},\bm{y}])=2) \notag\\
+  & \ + \doubleP(\text{rank}(\text{Tanh}([\bm{x},\bm{y}])) = \text{rank}([\bm{x},\bm{y}])
+  \,|\,\text{rank}([\bm{x},\bm{y}])<2) \doubleP(\text{rank}([\bm{x},\bm{y}])<2) \notag\\
+ = & \ \doubleP(\text{rank}(\text{Tanh}([\bm{x},\bm{y}])) = \text{rank}([\bm{x},\bm{y}])
+  \,|\, \text{rank}([\bm{x},\bm{y}])=2) \label{eq:probeq}
+  \end{align}
+
+\begin{comment}
+
+It is trivial when $x,y$ have 0 elements. \red{(It doesn't look obvious.)}
+
+\red{(For proving this theorem, this paragraph is not needed because $\doubleP(\mbox{rank}([\bm{x},\bm{y}])<2)=0$.)}
+Suppose $\bm{x} = [x_1, x_2]^T ,\bm{y} = [y_1, y_2]^T$ are linearly dependent and all of their elements are nonzero. If $\text{Tanh}(\bm{x})$ and $\text{Tanh}(\bm{y})$ are still linearly dependent, we must have
+$$
+ \frac{x_1}{y_1} = \frac{x_2}{y_2}, \qquad
+\frac{\text{Tanh}(x_1)}{\text{Tanh}(y_1)} = \frac{\text{Tanh}(x_2)}{\text{Tanh}(y_2)}
+$$
+These equations   have only one solution
+$$x_1 = \frac{1033977}{9530},\; x_2 = -\frac{929}{10} ,\; y_1 = -\frac{1113}{10}, \; y_2 = \frac{953}{10}$$
+which means pointwise $\text{Tanh}$ transformation will break the dependency of $\bm{x},\bm{y}$ with probability 1. %their linear dependency will be kept only when $x=y$, which is trivial.
+
+\end{comment}
+%
+
+
+For any fixed $\bm{x}\in \mathbb{R}^n$,
+suppose $\bm{x}$ and random $\bm{y}$ are linearly independent, but $\text{Tanh}(\bm{x})$ and $\text{Tanh}(\bm{y})$ are linearly dependent.
+Without loss of generality, we assume $x_n \neq 0$.
+Thus $\text{Tanh}(x_n)\neq 0$ and $\text{Tanh}(x_n)\neq 0$.
+Then we have
+$$
+\frac{\text{Tanh}(y_i)}{\text{Tanh}(y_n)} = \frac{\text{Tanh}(x_i)}{\text{Tanh}(x_n)}, \quad
+i=2,\ldots, n
+$$
+Thus,
+$$
+y_i = \text{Tanh}^{-1} \left(\frac{\text{Tanh} (x_i) \text{Tanh} (y_n)}{\text{Tanh}(x_n) }\right)
+, \quad i=2,\ldots, n
+$$
+For any fixed $\bm{x}$, the set formed by all $\bm{y}$ satisfying the above equalities
+has dimension 1,
+and therefore its Lebesgue measure is 0, implying that
+$$\doubleP(\rank(\mathrm{Tanh}([\bm{x},\bm{y}]))=1
+\,|\, \text{rank}([\bm{x},\bm{y}])=2)=0
+$$
+Then from \eqref{eq:probeq} we can conclude the result holds.
+\end{proof}
+
+\section{Numerical Experiments on Synthetic Data}
+\label{appendix:2}
+The goal of the experiments is to test which network structure with which kind of activation function has the potential to be extended to deep architecture. We measure this potential by the numerical rank of the output features in each hidden layer of the networks using synthetic data. The reason of choosing this measure can be explained by Theorem \ref{thm1}. We build the certain networks with depth 100 and the data is generated as follows.
+
+We first randomly generate edges of an Erd\H{o}s-R\'enyi graph $G(1000,0.01)$, \ie{} the existence of the edge between any pair of nodes is a Bernoulli random variable with $p = 0.01$.  Then, we construct the corresponding adjacency matrix $A$ of the graph which is a $\mathbb{R}^{1000 \times 1000} $ matrix. We generate a $\mathbb{R}^{1000 \times 500}$ feature matrix $\bm{X}$ and each of its element is drawn from $N(0,1)$. We normalize $A$ and $\bm{X}$ as \cite{kipf2016classification} and abuse the notation $A,\bm{X}$ to denote the normalized matrices. We keep 3 blocks in each layer of truncated block Krylov network. The number of input channel in each layer depends on the network structures and the number of output channel is set to be 128 for all networks. Each element in every parameter matrix $W_i, \; i = 1, \dots, 100$ is randomly sampled from $N(0,1)$ and the size is $\mathbb{R}^{\# input \times \#output}$. With the synthetic $A,\bm{X},W_i$, we simulate the feedforward process according to the network architecture and collect the numerical rank (at most 128) of the output in each of the 100 hidden layers. For each activation function under each network architecture, we repeat the experiments for 20 times and plot the mean results with standard deviation bars.
+
+
+\section{Rank Comparison of Activation Functions and Networks}
+\label{appendix:3}
+\begin{figure*}[htbp]
+\centering
+\subfloat[GCN]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{{fig_GCN_compare_all}.pdf}}
+\hfill
+\subfloat[Snowball]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{{fig_snowball_compare_all}.pdf}}
+\hfill
+\subfloat[Truncated Block Krylov]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{{fig_truncated_krylov_compare_all}.pdf}}
+\caption{Column ranks of different activation functions with the same architecture}
+\end{figure*}
+
+\begin{figure*}[htbp]
+\centering
+\subfloat[ReLU]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{{fig_relu_compare}.pdf}}
+\hfill
+\subfloat[Identity]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{{fig_identity_compare}.pdf}}
+\hfill
+\subfloat[Tanh]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{{fig_tanh_compare}.pdf}}
+\caption{Column ranks of different architectures with the same activation function}
+\end{figure*}
+
+\section{Spectrum of the Datasets}
+\label{appendix:4}
+%See figure \ref{spectrum_dataset}.
+\label{spectrum}
+\begin{figure*}[bhtp]
+\centering
+\subfloat[Cora]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{{fig_spectrum_cora}.pdf}}
+\hfill
+\subfloat[Citeseer]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{{fig_spectrum_citeseer}.pdf}}
+\hfill
+\subfloat[PubMed]{
+\captionsetup{justification = centering}
+\includegraphics[width=0.32\textwidth]{{fig_spectrum_pubmed}.pdf}}
+\caption{Spectrum of the renormalized adjacency matrices for several datasets}
+\label{spectrum_dataset}
+\end{figure*}
+
+%\subsection{Appendix \rom{7}: Adaptive Depth}
+%In practice, it is found that the performance of the training model is sensitive to the position of the training data in graph. If many of the training nodes happen to be located at some pivotal positions, \eg{} the center of a densely connected cluster, it is much faster to diffuse the feature signals across the graph. Otherwise, if a large part of our training nodes are isolated nodes or have few links with others, it will take much more steps for the signal to diffuse to other parts of the graph. Therefore, before we train the model, we should take an extra step to decide how many diffusion steps we need, \ie{} the number of layers of our network. If the depth is too shallow, the signal cannot diffuse to some unlabeled nodes. On the other hand, if the network is too deep, we have overfitting problem and our prediction are likely to be interfered by some noise signals from some pretty far nodes. So we try to design a method that the training data can deliver enough message to reachable nodes but the reachable nodes do not receive too much redundant message.
+%Another way is we compare how many new nodes that can be reach and how many new edges added to the reached nodes.
+%By using adaptive layer numbers, the final training results become more stable but there still exists some cases that you cannot every get a good upper bound. For this reason, we try to sacrifice the efficiency and directly use a large Dense GCN for any case.
+
+\section{Experiment Settings and Hyperparameters}
+\label{appendix:5}
+The so-called public splits in \cite{liao2019lanczos} and the setting that randomly sample 20 instances for each class as labeled data in \cite{yang2016revisiting} is actually the same. Most of the results for the algorithms with validation are cited from \cite{liao2019lanczos}, where they are reproduced with validation. However, some of them actually do not use validation in original papers and can achieve better results. In the paper, We compare with their best results.
+
+We use NVIDIA apex amp mixed-precision plugin for PyTorch to accelerate our experiments. Most of the results were obtained from NVIDIA V100 clusters on Beluga of Compute-Canada, with minor part of them obtained from NVIDIA K20, K80 clusters on Helios Compute-Canada. The hyperparameters are searched using Bayesian optimization.
+
+A useful tip is the smaller your training set is, the larger dropout probability should be set and the larger early stopping you should have.
+
+Table \ref{tab:hyperparameters_without_validation} and Table \ref{tab:hyperparameters_with_validation} show the hyperparameters to achieve the performance in the experiments, for cases without and with validation, respectively. When conducting the hyperparameter search, we encounter memory problems: current GPUs cannot afford deeper and wider structures. But we do observe better performance with the increment of the network size. It is expected to achieve better performance with more advanced deep learning devices.
+
+\input{tab_hyperparameters_with_validation.tex}
+
+\input{tab_hyperparameters_without_validation.tex}
+
+\end{appendices}
+
+\end{document}

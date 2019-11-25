@@ -1,10 +1,16 @@
-# Snowball and Truncated Krylov Graph Convolutional Networks in PyTorch
+# Snowball and Truncated Krylov Graph Convolutional Networks
 
-PyTorch implementation of Snowball and Truncated Krylov Graph Convolutional Network (GCN) architectures for semi-supervised classification [1].
+PyTorch and TensorFlow2 implementation of Snowball and Truncated Krylov Graph Convolutional Network (GCN) architectures for semi-supervised classification [1].
 
 This repository contains the Cora, CiteSeer and PubMed dataset.
 
 ## Performance Ranking
+
+Results are collected through the PyTorch implementation. These results WILL BE UPDATED since we have greatly optimized the implementations.
+
+There are slight differences between the 2 implementations, so you may have to redo the hyperparameter search for the TensorFlow2 implementation.
+
+Please feel free to leave comments if you have trouble reproducing the results!
 
 ### Cora
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/break-the-ceiling-stronger-multi-scale-deep/node-classification-on-cora-05)](https://paperswithcode.com/sota/node-classification-on-cora-05?p=break-the-ceiling-stronger-multi-scale-deep)
@@ -25,9 +31,9 @@ This repository contains the Cora, CiteSeer and PubMed dataset.
 
 ## Requirements
 
-  * PyTorch 1.0.0+
+  * PyTorch 1.3.x or TensorFlow 2.x.x
   * Python 3.6+
-  * Best with CUDA/10.0 and NVIDIA apex (we have used the container docker://nvcr.io/nvidia/pytorch:19.05-py3 with singularity)
+  * Best with NVIDIA apex (we have used the NGC container with singularity)
 
 ## Initialization
 
@@ -46,12 +52,14 @@ This repository contains the Cora, CiteSeer and PubMed dataset.
 Please kindly cite our work if necessary:
 
 ```
-@article{luan2019break,
-title={Break the Ceiling: Stronger Multi-scale Deep Graph Convolutional Networks},
-author={Luan, Sitao and Zhao, Mingde and Chang, Xiao-Wen and Precup, Doina},
-journal={arXiv},
-volume={1906.02174},
-year={2019},
-url={https://arxiv.org/abs/1906.02174},
+@incollection{luan2019break,
+title = {Break the Ceiling: Stronger Multi-scale Deep Graph Convolutional Networks},
+author = {Luan, Sitao and Zhao, Mingde and Chang, Xiao-Wen and Precup, Doina},
+booktitle = {Advances in Neural Information Processing Systems 32},
+editor = {H. Wallach and H. Larochelle and A. Beygelzimer and F. d\textquotesingle Alch\'{e}-Buc and E. Fox and R. Garnett},
+pages = {10943-10953},
+year = {2019},
+publisher = {Curran Associates, Inc.},
+url = {https://arxiv.org/abs/1906.02174}
 }
 ```
