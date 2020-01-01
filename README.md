@@ -6,7 +6,7 @@ This repository contains the Cora, CiteSeer and PubMed dataset.
 
 ## Performance Ranking
 
-Results are collected through the PyTorch implementation. These results WILL BE UPDATED since we have greatly optimized the implementations.
+Results are collected through the PyTorch implementation, which are published in our NeurIPS paper.
 
 There are slight differences between the 2 implementations, so you may have to redo the hyperparameter search for the TensorFlow2 implementation.
 
