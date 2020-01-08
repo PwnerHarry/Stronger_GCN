@@ -54,7 +54,7 @@ class truncated_krylov_layer(general_GCN_layer):
         elif self.LIST_A_EXP is not None:
             feature_output = []
             for i in range(self.n_blocks):
-                AX = self.multiplication(self.ADJ_EXPONENTIALS[i], input)
+                AX = self.multiplication(self.LIST_A_EXP[i], input)
                 feature_output.append(AX)
             output = torch.mm(torch.cat(feature_output, 1), self.shared_weight)
         if eye:
